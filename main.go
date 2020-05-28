@@ -36,7 +36,7 @@ func main() {
 }
 
 func indexDataHandler(w http.ResponseWriter, r *http.Request) {
-	result := elastic.IndexData(&w, ElasticUrl)
+	result := elastic.IndexData(&w, ElasticUrl, r)
 	json.NewEncoder(w).Encode(result)
 }
 

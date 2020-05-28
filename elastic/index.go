@@ -10,7 +10,7 @@ import (
 
 type Index common.Index
 
-// Возвращает все индексы находящиеся в эластике
+// возвращает все индексы находящиеся в эластике
 func GetIndices(w *http.ResponseWriter, baseUrl string) []Index {
 	fullUrl := baseUrl + "_cat/indices"
 	data := ``
@@ -36,7 +36,7 @@ func GetIndices(w *http.ResponseWriter, baseUrl string) []Index {
 	return indices
 }
 
-// Создание индекса
+// создание индекса
 func CreateIndex(w *http.ResponseWriter, baseUrl string) common.JsonResult {
 	result := DeleteIndex(w, baseUrl)
 	if result.Status != "success" {
