@@ -5,6 +5,7 @@ import (
 	"elastic-manager/elastic"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net"
 	"net/http"
 	"strconv"
@@ -46,7 +47,7 @@ func (m *ElasticManager) GetIndices(w *http.ResponseWriter) []Index {
 func (m *ElasticManager) CreateIndex(w *http.ResponseWriter) JsonResult {
 	indexManager := &elastic.IndexManager{BaseUrl: m.Url}
 	fullUrl := indexManager.BuildUrl()
-	data := ``
+	data := indexManager.BuildSettings()
 
 	response, err := m.makeRequest(w, fullUrl, data, http.MethodPut)
 	if err != nil {
@@ -71,7 +72,8 @@ func (m *ElasticManager) DeleteIndex(w *http.ResponseWriter) JsonResult {
 }
 
 // кидает реквест
-func (m *ElasticManager) makeRequest(w *http.ResponseWriter, url string, data string, requestType string) (string, error) {
+func (m *ElasticManager) makeRequest(w *http.ResponseWriter, url, data, requestType string) (string, error) {
+	log.Printf("Sending request by URL: %s [%s]", url, requestType)
 	transport := getTransport()
 
 	// хрен его знает в чем разница но нужно понять зачем еще и клиент создавать
@@ -80,8 +82,8 @@ func (m *ElasticManager) makeRequest(w *http.ResponseWriter, url string, data st
 		Transport: transport,
 	}
 
-	// raw реквеста
-	body := bytes.NewBufferString(data) // видимо форматируем дату (кароч полезная штука)
+	// видимо форматируем raw (кароч полезная штука)
+	body := bytes.NewBufferString(data)
 
 	// задаем метод запроса, урл и отправляемые данные
 	request, _ := http.NewRequest(requestType, url, body)
