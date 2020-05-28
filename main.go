@@ -16,7 +16,7 @@ func main() {
 	mux := mux.NewRouter()
 	mux.HandleFunc("/api/v1/getIndices", getIndicesHandler).Methods("GET")
 	mux.HandleFunc("/api/v1/createIndex", createIndexHandler).Methods("GET")
-	mux.HandleFunc("/api/v1/deleteIndex", de)
+	mux.HandleFunc("/api/v1/deleteIndex", deleteIndexHandler).Methods("GET")
 
 	const address string = ":8080"
 
@@ -44,6 +44,6 @@ func createIndexHandler(w http.ResponseWriter, r *http.Request) {
 
 func deleteIndexHandler(w http.ResponseWriter, r *http.Request) {
 	manager := &manager.ElasticManager{Url: ElasticUrl}
-	result := manager.CreateIndex(&w)
+	result := manager.DeleteIndex(&w)
 	json.NewEncoder(w).Encode(result)
 }

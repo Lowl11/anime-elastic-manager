@@ -1,12 +1,12 @@
 package manager
 
 type Index struct {
-	Name           string
-	Status         string
-	DocumentsCount string
-	HashCode       string
-	Size           string
-	Shards         string
+	Name           string `json:"name"`
+	Status         string `json:"status"`
+	DocumentsCount string `json:"documents_count"`
+	HashCode       string `json:"hash_code"`
+	Size           string `json:"size"`
+	Shards         string `json:"shards"`
 }
 
 func (i *Index) String() string {
@@ -20,7 +20,7 @@ func (i *Index) String() string {
 }
 
 type JsonResult struct {
-	Status       string
-	Message      string
-	ErrorMessage string
+	Status       string `json:"status"`
+	Message      string `json:"message"`
+	ErrorMessage string `json:"error_message"`
 }
