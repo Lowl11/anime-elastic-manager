@@ -1,7 +1,7 @@
 package main
 
 import (
-	"elastic-manager/manager"
+	"elastic-manager/elastic"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -14,9 +14,14 @@ var ElasticUrl string = "http://127.0.0.1:9200/"
 
 func main() {
 	mux := mux.NewRouter()
+
+	// Работа с индексами
 	mux.HandleFunc("/api/v1/getIndices", getIndicesHandler).Methods("GET")
 	mux.HandleFunc("/api/v1/createIndex", createIndexHandler).Methods("GET")
 	mux.HandleFunc("/api/v1/deleteIndex", deleteIndexHandler).Methods("GET")
+
+	// Работа с данными
+	mux.HandleFunc("/api/v1/indexDocs", indexDocsHandler).Methods("POST")
 
 	const address string = ":8080"
 
@@ -30,20 +35,22 @@ func main() {
 	log.Fatal(server.ListenAndServe())
 }
 
+func indexDocsHandler(w http.ResponseWriter, r *http.Request) {
+	indices := elastic.GetIndices(&w, ElasticUrl)
+	json.NewEncoder(w).Encode(indices)
+}
+
 func getIndicesHandler(w http.ResponseWriter, r *http.Request) {
-	manager := &manager.ElasticManager{Url: ElasticUrl}
-	indices := manager.GetIndices(&w)
+	indices := elastic.GetIndices(&w, ElasticUrl)
 	json.NewEncoder(w).Encode(indices)
 }
 
 func createIndexHandler(w http.ResponseWriter, r *http.Request) {
-	manager := &manager.ElasticManager{Url: ElasticUrl}
-	result := manager.CreateIndex(&w)
+	result := elastic.CreateIndex(&w, ElasticUrl)
 	json.NewEncoder(w).Encode(result)
 }
 
 func deleteIndexHandler(w http.ResponseWriter, r *http.Request) {
-	manager := &manager.ElasticManager{Url: ElasticUrl}
-	result := manager.DeleteIndex(&w)
+	result := elastic.DeleteIndex(&w, ElasticUrl)
 	json.NewEncoder(w).Encode(result)
 }

@@ -1,4 +1,4 @@
-package manager
+package common
 
 type Index struct {
 	Name           string `json:"name"`

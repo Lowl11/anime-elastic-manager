@@ -1,19 +1,72 @@
 package elastic
 
 import (
+	"elastic-manager/common"
 	"fmt"
+	"net/http"
+	"strings"
 	"time"
 )
 
-type IndexManager struct {
-	BaseUrl string
+type Index common.Index
+
+// Возвращает все индексы находящиеся в эластике
+func GetIndices(w *http.ResponseWriter, baseUrl string) []Index {
+	fullUrl := baseUrl + "_cat/indices"
+	data := ``
+	response, err := common.MakeRequest(w, fullUrl, data, http.MethodGet)
+	if err != nil {
+		panic(err)
+	}
+	lines := strings.SplitN(strings.TrimSpace(response), "\n", -1)
+	indices := make([]Index, 0, len(lines))
+	for _, line := range lines {
+		words := strings.Split(line, ` `)
+
+		index := &Index{
+			Status:         words[0],
+			Name:           words[2],
+			HashCode:       words[3],
+			Shards:         words[4],
+			DocumentsCount: words[6],
+			Size:           words[8],
+		}
+		indices = append(indices, *index)
+	}
+	return indices
 }
 
-func (m *IndexManager) BuildUrl() string {
-	return m.BaseUrl + getAnimeIndexName()
+// Создание индекса
+func CreateIndex(w *http.ResponseWriter, baseUrl string) common.JsonResult {
+	fullUrl := buildUrl(baseUrl)
+	data := buildSettings()
+
+	response, err := common.MakeRequest(w, fullUrl, data, http.MethodPut)
+	if err != nil {
+		return common.GetSimpleResult(false, err.Error())
+	}
+
+	return common.GetSimpleResult(true, response)
 }
 
-func (m *IndexManager) BuildSettings() string {
+// удаление индекса
+func DeleteIndex(w *http.ResponseWriter, baseUrl string) common.JsonResult {
+	fullUrl := buildUrl(baseUrl)
+	data := ``
+
+	response, err := common.MakeRequest(w, fullUrl, data, http.MethodDelete)
+	if err != nil {
+		return common.GetSimpleResult(false, err.Error())
+	}
+
+	return common.GetSimpleResult(true, response)
+}
+
+func buildUrl(baseUrl string) string {
+	return baseUrl + getAnimeIndexName()
+}
+
+func buildSettings() string {
 	settings :=
 		`{
 			"settings": {
