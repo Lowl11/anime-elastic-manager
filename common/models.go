@@ -24,3 +24,14 @@ type JsonResult struct {
 	Message      string `json:"message"`
 	ErrorMessage string `json:"error_message"`
 }
+
+type Anime struct {
+	Id               int
+	TitleRus         string
+	TitleForeign     string
+	Description      string
+	Season           int
+	EpisodesQuantity int
+	StartDate        string
+	Image            string
+}

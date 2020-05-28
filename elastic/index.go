@@ -38,6 +38,11 @@ func GetIndices(w *http.ResponseWriter, baseUrl string) []Index {
 
 // Создание индекса
 func CreateIndex(w *http.ResponseWriter, baseUrl string) common.JsonResult {
+	result := DeleteIndex(w, baseUrl)
+	if result.Status != "success" {
+		panic("Удаление индекса прошло безуспешно")
+	}
+
 	fullUrl := buildUrl(baseUrl)
 	data := buildSettings()
 

@@ -21,7 +21,7 @@ func main() {
 	mux.HandleFunc("/api/v1/deleteIndex", deleteIndexHandler).Methods("GET")
 
 	// Работа с данными
-	mux.HandleFunc("/api/v1/indexDocs", indexDocsHandler).Methods("POST")
+	mux.HandleFunc("/api/v1/indexData", indexDataHandler).Methods("POST")
 
 	const address string = ":8080"
 
@@ -35,9 +35,9 @@ func main() {
 	log.Fatal(server.ListenAndServe())
 }
 
-func indexDocsHandler(w http.ResponseWriter, r *http.Request) {
-	indices := elastic.GetIndices(&w, ElasticUrl)
-	json.NewEncoder(w).Encode(indices)
+func indexDataHandler(w http.ResponseWriter, r *http.Request) {
+	result := elastic.IndexData(&w, ElasticUrl)
+	json.NewEncoder(w).Encode(result)
 }
 
 func getIndicesHandler(w http.ResponseWriter, r *http.Request) {
