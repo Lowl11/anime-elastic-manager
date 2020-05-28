@@ -44,23 +44,29 @@ func (m *ElasticManager) GetIndices(w *http.ResponseWriter) []Index {
 
 // Создание индекса
 func (m *ElasticManager) CreateIndex(w *http.ResponseWriter) JsonResult {
-	fullUrl := m.Url + elastic.AnimeIndexName()
+	indexManager := &elastic.IndexManager{BaseUrl: m.Url}
+	fullUrl := indexManager.BuildUrl()
 	data := ``
+
 	response, err := m.makeRequest(w, fullUrl, data, http.MethodPut)
 	if err != nil {
 		return getSimpleResult(false, err.Error())
 	}
+
 	return getSimpleResult(true, response)
 }
 
 // удаление индекса
 func (m *ElasticManager) DeleteIndex(w *http.ResponseWriter) JsonResult {
-	fullUrl := m.Url + elastic.AnimeIndexName()
+	indexManager := &elastic.IndexManager{BaseUrl: m.Url}
+	fullUrl := indexManager.BuildUrl()
 	data := ``
+
 	response, err := m.makeRequest(w, fullUrl, data, http.MethodDelete)
 	if err != nil {
 		return getSimpleResult(false, err.Error())
 	}
+
 	return getSimpleResult(true, response)
 }
 
