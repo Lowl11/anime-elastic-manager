@@ -1,8 +1,8 @@
 package elastic
 
 import (
-	"elastic-manager/common"
 	"fmt"
+	"lazy-owl/elastic-manager/src/common"
 	"net/http"
 	"strings"
 	"time"

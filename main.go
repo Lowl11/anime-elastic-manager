@@ -1,8 +1,9 @@
 package main
 
 import (
-	"elastic-manager/elastic"
 	"encoding/json"
+	"fmt"
+	"lazy-owl/elastic-manager/src/elastic"
 	"log"
 	"net/http"
 	"time"
@@ -16,6 +17,7 @@ func main() {
 	mux := mux.NewRouter()
 
 	// Работа с индексами
+	mux.HandleFunc("/", mainHandler)
 	mux.HandleFunc("/api/v1/getIndices", getIndicesHandler).Methods("GET")
 	mux.HandleFunc("/api/v1/createIndex", createIndexHandler).Methods("GET")
 	mux.HandleFunc("/api/v1/deleteIndex", deleteIndexHandler).Methods("GET")
@@ -33,6 +35,10 @@ func main() {
 	}
 
 	log.Fatal(server.ListenAndServe())
+}
+
+func mainHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "Hello World")
 }
 
 func indexDataHandler(w http.ResponseWriter, r *http.Request) {
