@@ -6,6 +6,7 @@ import (
 	"lazy-owl/elastic-manager/src/elastic"
 	"log"
 	"net/http"
+	"text/template"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -38,7 +39,15 @@ func main() {
 }
 
 func mainHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Hello World")
+	templ, err := template.ParseFiles(
+		"src/templates/index.html",
+	)
+
+	if err != nil {
+		fmt.Fprintf(w, err.Error())
+	}
+
+	templ.Execute(w, nil)
 }
 
 func indexDataHandler(w http.ResponseWriter, r *http.Request) {
